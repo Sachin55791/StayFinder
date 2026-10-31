@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+}
+
+.brand-blue { background-color: #0b1f3a; }
+.btn-brand-blue { background-color: #0b2545; color: #ffffff; }
+.btn-brand-blue:hover { background-color: #13345c; }
+
+.hero-banner {
+    background: linear-gradient(180deg, rgba(11, 31, 58, 0.65) 0%, rgba(11, 31, 58, 0.9) 100%),
+                url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+}
+
+.gold-accent { color: #eab308; }
+.modal-active { display: flex !important; }
+.role-btn-active { background-color: #0b2545; color: #ffffff; font-weight: 700; }

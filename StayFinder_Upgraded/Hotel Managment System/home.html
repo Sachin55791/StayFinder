@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayFinder - Multi-Role Hotel Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .brand-blue { background-color: #0b1f3a; }
+        .btn-brand-blue { background-color: #0b2545; color: #ffffff; }
+        .btn-brand-blue:hover { background-color: #13345c; }
+        .hero-banner {
+            background: linear-gradient(180deg, rgba(11, 31, 58, 0.65) 0%, rgba(11, 31, 58, 0.9) 100%),
+                        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat;
+        }
+        .gold-accent { color: #eab308; }
+        .modal-active { display: flex !important; }
+        .role-btn-active { background-color: #0b2545; color: #ffffff; font-weight: 700; }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="#" onclick="showSection('home')" class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center text-slate-950 font-bold text-xl shadow-md">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <div>
+                    <span class="text-2xl font-extrabold tracking-tight text-slate-900 leading-none block">Stay<span class="text-amber-500">Finder</span></span>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Multiple Hotels. One Platform.</span>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-600">
+                <button onclick="showSection('home')" id="nav-home" class="text-slate-900 border-b-2 border-amber-500 pb-1 font-bold">Home</button>
+                <button onclick="showSection('hotels')" id="nav-hotels" class="hover:text-slate-900">Hotels</button>
+                <button onclick="showSection('user-dashboard')" id="nav-dash" class="hover:text-slate-900">Dashboard</button>
+                <button onclick="showSection('about')" id="nav-about" class="hover:text-slate-900">About</button>
+                <button onclick="showSection('contact')" id="nav-contact" class="hover:text-slate-900">Contact</button>
+            </nav>
+
+            <div class="flex items-center gap-3 text-xs font-semibold">
+                <button onclick="openLocationModal()" class="flex items-center gap-2 text-slate-800 bg-rose-50 hover:bg-rose-100 px-3 py-2 rounded-xl border border-rose-200 transition-all">
+                    <i class="fa-solid fa-location-crosshairs text-rose-600 text-xs"></i>
+                    <span id="selected-address-badge" class="font-bold text-slate-900 max-w-[130px] truncate">Faridabad Sec 30</span>
+                </button>
+
+                <div id="user-logged-badge" class="hidden items-center gap-2 bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-xl border border-emerald-200 font-bold">
+                    <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                    <span id="logged-user-name">Guest</span>
+                </div>
+                <button id="logout-header-btn" onclick="logout()" class="hidden px-3 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold">Logout</button>
+                <button onclick="openLoginModal()" id="login-header-btn" class="px-3.5 py-2 rounded-xl border border-slate-300 text-slate-800 font-bold hover:bg-slate-50">Login</button>
+                <button onclick="openRegisterModal()" id="signup-header-btn" class="px-3.5 py-2 rounded-xl btn-brand-blue font-bold shadow-md">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1">
+
+        <!-- HOME SECTION -->
+        <div id="section-home-wrapper">
+            <section class="hero-banner relative pt-12 pb-24 px-6 text-white overflow-hidden">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div class="lg:col-span-8 space-y-6">
+                        <p class="text-xs font-extrabold uppercase tracking-widest text-slate-300">AI-POWERED MULTI-HOTEL BOOKING PLATFORM</p>
+                        <h1 class="text-4xl sm:text-6xl font-black tracking-tight leading-tight text-white">
+                            Find Your <span class="gold-accent">Perfect Stay</span><br>Across Multiple Hotels
+                        </h1>
+                        <p class="text-slate-200 text-sm sm:text-base font-light max-w-2xl leading-relaxed">
+                            Explore thousands of hotels, compare prices, select room categories (Single, Double, Suite), and book instantly with verified OTP accounts.
+                        </p>
+
+                        <div class="bg-white rounded-2xl p-4 shadow-2xl text-slate-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center mt-8">
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 col-span-1 sm:col-span-2">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Where are you going?</label>
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-location-dot text-rose-500 text-xs"></i>
+                                    <input type="text" id="main-search-city" value="Faridabad Sec 30" placeholder="Type city, landmark, or address..." class="bg-transparent text-xs font-bold w-full focus:outline-none text-slate-900">
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Check-in</label>
+                                <input type="date" value="2026-11-10" class="bg-transparent text-xs font-bold w-full focus:outline-none">
+                            </div>
+                            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Guests</label>
+                                <select class="bg-transparent text-xs font-bold w-full focus:outline-none">
+                                    <option>1 Guest</option>
+                                    <option selected>2 Guests</option>
+                                    <option>3+ Guests</option>
+                                </select>
+                            </div>
+                            <div>
+                                <button onclick="triggerSearch()" class="w-full h-full min-h-[50px] btn-brand-blue font-bold text-xs rounded-xl shadow-lg flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI ASSISTANT -->
+                    <div class="lg:col-span-4">
+                        <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-2xl border border-slate-100 space-y-4">
+                            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white text-lg shadow-md">
+                                        <i class="fa-solid fa-robot"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-sm text-slate-900">AI Travel Assistant</h3>
+                                        <p class="text-[10px] text-emerald-600 font-bold flex items-center gap-1">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Smart AI Active
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="ai-chat-body" class="space-y-3 max-h-56 overflow-y-auto p-1 text-xs">
+                                <div class="bg-slate-100 p-3 rounded-2xl text-slate-800 leading-relaxed">
+                                    Hello! 👋 Ask me to find hotels near your exact location (e.g., <i>"find hotel at Faridabad Sec 30"</i>).
+                                </div>
+                            </div>
+                            <div class="pt-2 border-t border-slate-100 flex items-center gap-2">
+                                <input type="text" id="ai-input" placeholder="Type location or query..." onkeypress="if(event.key==='Enter') sendAiMessage()" class="w-full text-xs p-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500">
+                                <button onclick="sendAiMessage()" class="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+                                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- HOTELS SECTION -->
+        <div id="section-hotels-wrapper" class="py-16 px-6 max-w-7xl mx-auto w-full">
+            <h2 class="text-2xl font-extrabold text-slate-900 mb-1" id="hotels-heading">Popular Verified Hotels</h2>
+            <p class="text-xs text-slate-500 mb-8">Handpicked hotels with live details, maps, and room booking options</p>
+            <div id="hotels-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Cards Rendered via JS -->
+            </div>
+        </div>
+
+        <!-- USER DASHBOARD -->
+        <div id="section-user-dashboard-wrapper" class="hidden py-12 px-6 max-w-7xl mx-auto w-full space-y-6">
+            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900">User Dashboard</h2>
+                    <p class="text-xs text-slate-500">Welcome back! Manage your room bookings and account profile.</p>
+                </div>
+                <span class="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-2xl border border-emerald-200 text-xs font-bold">Active Customer Account</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
+                    <h3 class="font-bold text-sm text-slate-800 uppercase tracking-wider">My Bookings</h3>
+                    <div id="my-bookings-list" class="space-y-2 text-xs">
+                        <p class="p-3 bg-slate-50 rounded-2xl border text-slate-500">Your booking requests will appear here after you sign in.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3 col-span-2">
+                    <h3 class="font-bold text-sm text-slate-800 uppercase tracking-wider">Account Details</h3>
+                    <div class="grid grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <span class="text-slate-400 block font-semibold">Registered Name</span>
+                            <span id="dash-user-name" class="font-bold text-slate-800">Sachin Kumar</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block font-semibold">Phone Number</span>
+                            <span class="font-bold text-slate-800">Not verified</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OWNER DASHBOARD -->
+            <section id="owner-dashboard-panel" class="hidden bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-lg font-bold">Hotel Owner Panel</h3>
+                <p class="text-xs text-slate-500">Submit a property for admin approval. New listings remain pending until approved.</p>
+                <form id="owner-hotel-form" onsubmit="createOwnerHotel(event)" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    <input id="owner-hotel-name" required placeholder="Hotel name" class="border rounded-xl p-3">
+                    <input id="owner-hotel-city" required placeholder="City" class="border rounded-xl p-3">
+                    <input id="owner-hotel-location" required placeholder="Full location" class="border rounded-xl p-3">
+                    <input id="owner-hotel-price" type="number" min="1" required placeholder="Starting price per night (INR)" class="border rounded-xl p-3">
+                    <input id="owner-hotel-image" placeholder="Image URL (optional)" class="border rounded-xl p-3">
+                    <input id="owner-hotel-facilities" placeholder="Facilities, comma separated" class="border rounded-xl p-3">
+                    <button class="md:col-span-2 bg-blue-700 text-white rounded-xl p-3 font-bold">Submit Property for Approval</button>
+                </form>
+                <div id="owner-hotels-list" class="space-y-2 text-xs"></div>
+                <div class="border-t pt-4 space-y-3">
+                    <h4 class="font-bold text-base">Booking Requests</h4>
+                    <div id="owner-booking-requests" class="space-y-3 text-xs">Login as a hotel owner to view booking requests.</div>
+                </div>
+            </section>
+
+            <!-- ADMIN DASHBOARD -->
+            <section id="admin-dashboard-panel" class="hidden bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+                <h3 class="text-lg font-bold">Admin – Pending Hotel Approvals</h3>
+                <p class="text-xs text-slate-500">Admin role must be granted manually by the system owner; public signup cannot create admins.</p>
+                <div id="admin-pending-list" class="space-y-2 text-xs">Sign in with an administrator account to review pending properties.</div>
+            </section>
+        </div>
+                <!-- ABOUT SECTION -->
+        <div id="section-about-wrapper" class="hidden bg-white py-16 px-6 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-500">ABOUT STAYFINDER</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900">Next-Generation Multi-Hotel Booking System</h2>
+                    <p class="text-slate-600 text-xs leading-relaxed">
+                        StayFinder connects travelers with verified multi-vendor hotels across India. Featuring a database-grounded travel assistant, users can explore approved properties and submit booking requests. Payment processing and date-level availability are not enabled until configured.
+                    </p>
+                </div>
+                <div class="rounded-3xl overflow-hidden shadow-xl h-80">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACT SECTION -->
+        <div id="section-contact-wrapper" class="hidden py-16 px-6 max-w-6xl mx-auto space-y-8">
+            <div class="text-center space-y-1">
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-500">CONTACT SUPPORT</span>
+                <h2 class="text-2xl font-extrabold text-slate-900">Get in Touch with StayFinder Helpdesk</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <form onsubmit="alert('Message sent to StayFinder Support!'); event.preventDefault();" class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-xs">
+                    <input type="text" required placeholder="Your Name" class="w-full p-3 bg-slate-50 border rounded-xl">
+                    <input type="email" required placeholder="Email Address" class="w-full p-3 bg-slate-50 border rounded-xl">
+                    <textarea rows="3" required placeholder="Your Message..." class="w-full p-3 bg-slate-50 border rounded-xl"></textarea>
+                    <button type="submit" class="w-full py-3.5 btn-brand-blue font-bold rounded-xl shadow">Send Message</button>
+                </form>
+                <div class="bg-white p-2 rounded-3xl border border-slate-200 shadow-sm h-80 overflow-hidden">
+                    <iframe class="w-full h-full rounded-2xl border-0" src="https://maps.google.com/maps?q=Faridabad%20Haryana&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- REGISTER MODAL -->
+    <div id="register-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeRegisterModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-xl font-bold">✕</button>
+
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Create Account</h2>
+                <p class="text-xs text-slate-500 mt-1">
+                    Already have an account?
+                    <button onclick="switchToLogin()" class="text-blue-600 font-bold hover:underline">Log in</button>
+                </p>
+            </div>
+
+            <div class="bg-slate-100 p-1 rounded-xl grid grid-cols-2 gap-1 text-xs font-semibold text-slate-600 text-center">
+                <button onclick="setAuthRole('USER')" id="reg-role-user" class="py-2 rounded-lg role-btn-active">User</button>
+                <button onclick="setAuthRole('OWNER')" id="reg-role-owner" class="py-2 rounded-lg">Hotel Owner</button>
+            </div>
+
+            <form onsubmit="handleRegisterSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Full Name</label>
+                    <input type="text" id="reg-name-field" required placeholder="e.g. Rahul Sharma" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Email Address</label>
+                    <input type="email" id="reg-email-field" required placeholder="name@example.com" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                </div>
+
+                <div id="owner-fields" class="hidden space-y-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Hotel / Property Name</label>
+                        <input type="text" placeholder="e.g. Grand Vista Resort" class="w-full p-3 bg-slate-50 border rounded-xl">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Mobile Phone Number</label>
+                    <input type="tel" id="reg-phone-field" placeholder="9876543210" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                    <p class="text-[10px] text-slate-500 mt-1">Phone verification will be enabled after an SMS provider is configured.</p>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Password</label>
+                    <input type="password" id="reg-password-field" minlength="8" required placeholder="At least 8 characters" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                </div>
+
+                <button type="submit" class="w-full py-3.5 btn-brand-blue font-bold rounded-xl shadow-lg text-xs">
+                    Register Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div id="login-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl relative space-y-5">
+            <button onclick="closeLoginModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-xl font-bold">✕</button>
+
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900">Log in</h2>
+                <p class="text-xs text-slate-500 mt-1">
+                    New user?
+                    <button onclick="switchToRegister()" class="text-blue-600 font-bold hover:underline">Register Now</button>
+                </p>
+            </div>
+
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Username / Email / Mobile</label>
+                    <input type="email" id="login-user-field" required placeholder="Enter email address" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Password</label>
+                    <input type="password" id="login-password-field" required placeholder="Enter password" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold rounded-xl shadow-lg text-xs">
+                    Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- LOCATION MODAL -->
+    <div id="location-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl relative space-y-4">
+            <button onclick="closeLocationModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-xl font-bold">✕</button>
+
+            <div>
+                <h3 class="text-lg font-bold text-slate-900">Select Location or Track GPS</h3>
+                <p class="text-xs text-slate-500">Type any address, landmark or click GPS</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                <input type="text" id="modal-address-input" placeholder="e.g. Faridabad Sec 30 or JK Public School..." class="sm:col-span-8 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none">
+                <button onclick="searchModalAddress()" class="sm:col-span-2 py-3 bg-slate-900 text-white font-bold text-xs rounded-xl">Search</button>
+                <button onclick="detectUserGPS()" class="sm:col-span-2 py-3 bg-rose-600 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1">
+                    <i class="fa-solid fa-crosshairs"></i> GPS
+                </button>
+            </div>
+
+            <div class="h-64 rounded-2xl overflow-hidden border border-slate-200 bg-slate-100">
+                <iframe id="google-map-embed" class="w-full h-full border-0" src="https://maps.google.com/maps?q=Faridabad%20Haryana&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeLocationModal()" class="px-4 py-2 border rounded-xl text-xs font-bold">Cancel</button>
+                <button onclick="confirmMapLocation()" class="px-5 py-2 btn-brand-blue text-xs font-bold rounded-xl shadow">Confirm Location</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ROOM DETAILS MODAL -->
+    <div id="hotel-details-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
+            <button onclick="closeDetailsModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-xl font-bold">✕</button>
+            <div id="modal-details-container"></div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="brand-blue text-white py-8 px-6 text-center text-xs mt-auto">
+        <p>© 2026 StayFinder Platform. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript Controller -->
+    <script src="script.js"></script>
+</body>
+</html>
